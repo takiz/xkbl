@@ -15,19 +15,21 @@ int main(void)
         XkbDescPtr desc;
         char *kb_name;
         
-        if (XkbGetState(dpy, XkbUseCoreKbd, &state) == Success)        
+        if (XkbGetState(dpy, XkbUseCoreKbd, &state) == Success) {
                 desc = XkbGetMap(dpy, XkbAllClientInfoMask, XkbUseCoreKbd);
         
-        if (desc && XkbGetNames(dpy, XkbGroupNamesMask, desc) == Success)
-                kb_name = XGetAtomName(dpy, desc->names->groups[state.group]);
-        
-        if (kb_name) {
-                printf("%.2s", kb_name);
-                XFree(kb_name);
-        }
+                if (desc && XkbGetNames(dpy, XkbGroupNamesMask, desc) == Success) {
+                        kb_name = XGetAtomName(dpy, desc->names->groups[state.group]);
+                        if (kb_name) {
+                                printf("%.2s", kb_name);
+                                XFree(kb_name);
+                        }
+                }
                 
-        XkbFreeClientMap(desc, XkbAllClientInfoMask, True);
-        XkbFreeNames(desc, XkbGroupNamesMask, True);
+                XkbFreeClientMap(desc, XkbAllClientInfoMask, True);
+                XkbFreeNames(desc, XkbGroupNamesMask, True);
+        }
+        
         XCloseDisplay(dpy);
         return 0;
 }
